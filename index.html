@@ -1,0 +1,189 @@
+<!Doctype html>
+<html>
+<head>
+  <title> shalli Portfolio </title>
+<style>
+body{
+  box-sizing:border-box;
+  margin:0px;
+  background-image:url('images/background3.jpg');
+  background-repeat:repeat;
+  background-size: cover;
+}
+
+
+#name_div h2{
+  font:45px;
+  color:#f9584b;
+}
+#nav_div{
+  float:right;
+  margin-right:10px;
+  top:0px;
+  right:5px;
+}
+#nav_div nav ul li{
+  display:inline;
+  style:none;
+  float:left;
+  padding : 30px;
+  padding-top: 5px;
+  padding-bottom: 5px;
+
+}
+#nav_div nav ul li:hover{
+  background-color:rgba(231,226,222,0.6);
+}
+#name_div{
+  float:left;
+  padding:30px;
+
+}
+ul{
+  list-style-type:none;
+}
+#nav_div nav ul li a {
+  display:block;
+  text-decoration:none;
+  color:white;
+  font-size: 15px;
+}
+#nav_div nav ul li a img {
+  height: :100px;
+  width:80px;
+  border-radius: 10px;
+  display:none;
+}
+
+#welcome_text{
+
+  color:white;
+  font-size: 50px;
+}
+#opening_text{
+  color:white;
+  font-size: 30px;
+}
+#main1{
+  position: absolute;
+  top:30%;
+  left: 15%;
+  right:10%;
+}
+#home_icon{
+  height:70px;
+  width:70px;
+  border-radius:5px;
+}
+#frames{
+  right:25px;
+  position: absolute;
+  top:10%;
+}
+
+</style>
+<script>
+function change_icon(){
+  document.getElementById("w_icon").style.display="block";
+  document.getElementById("w_text").style.display ="none";
+}
+function change_icon_back(){
+  document.getElementById("w_icon").style.display="none";
+  document.getElementById("w_text").style.display ="block";
+}
+
+function change_icon1(){
+  document.getElementById("A_icon").style.display="block";
+  document.getElementById("A_text").style.display ="none";
+}
+function change_icon_back1(){
+  document.getElementById("A_icon").style.display="none";
+  document.getElementById("A_text").style.display ="block";
+}
+
+
+function change_icon2(){
+  document.getElementById("G_icon").style.display="block";
+  document.getElementById("G_text").style.display ="none";
+}
+function change_icon_back2(){
+  document.getElementById("G_icon").style.display="none";
+  document.getElementById("G_text").style.display ="block";
+}
+
+function frame_changer(v){
+
+  switch (v) {
+    case "W":
+      document.getElementById("frames").style.display = "block";
+      document.getElementById('frames').src ="work.html";
+      break;
+    case "A":
+      document.getElementById("frames").style.display = "block";
+      document.getElementById("frames").src = "about.html";
+      break;
+    case "G":
+      document.getElementById("frames").style.display = "block";
+      document.getElementById("frames").src = "contact.html";
+
+      break;
+    case "C":
+      document.getElementById('frames').style.display = "none";
+      console.log('buzz');
+
+
+    default:
+      document.getElementById('frames').style.display = "none";
+
+  }
+
+}
+
+
+  </script>
+</head>
+<body onload="frame_changer('C')">
+
+<header>
+<div id="head">
+<div id = "name_div"> <h2> Shalli Leroi </h2></div>
+<div id = "nav_div">
+  <nav>
+     <ul>
+       <li> <img src="images/home_icon-removebg-preview.png" alt="Home" id='home_icon' onclick="frame_changer('C')"> </li>
+       <li><a href ="#" onmouseover ="change_icon()" onmouseout="change_icon_back()" onclick="frame_changer('W')"><h3 id ="w_text" >Work</h3><img src = "images/about.jpg"  alt="w" id = "w_icon"> </a></li>
+       <li><a href ="#" onmouseover ="change_icon1()" onmouseout="change_icon_back1()" onclick="frame_changer('A')"><h3 id = "A_text">About</h3><img src="images/about2.jpg" alt="A" id = "A_icon"> </a></li>
+       <li><a href ="#" onmouseover ="change_icon2()" onmouseout="change_icon_back2()" onclick="frame_changer('G')"><h3 id = "G_text">Get In Touch</h3><img src="images/Ai1.jpg" alt="G" id = "G_icon"> </a></li>
+    </ul>
+  </nav>
+ </div>
+  </div>
+</header>
+
+<main>
+
+<div id = "main1">
+  <h2 id = "welcome_text"> Welcome To My Portfolio </h2>
+  <h2 id = "welcome_text"> Software Developer </h2>
+    <p id=opening_text> Hi  </p>
+    <p id=opening_text>
+       I am Michel Leroi a full stack developer, <br>
+        Resolving designs problems, Building Smart
+        User interfaces, Backend and Useful interactions,
+        Developing rich web application. I am a programmer, Graduate of CHITECTMA University,
+        and now a freelancer.
+        <p/>
+
+
+
+</div>
+<iframe src="work.html" width="70%" height="70%" id="frames"></iframe>
+  </main>
+
+<footer>
+
+  </footer>
+
+</body>
+
+</html>
