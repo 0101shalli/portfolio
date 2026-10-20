@@ -1,0 +1,57 @@
+---
+import type { CollectionEntry } from 'astro:content';
+
+interface Props {
+  project: CollectionEntry<'projects'>;
+}
+
+const { project } = Astro.props;
+const { title, summary, image, tech, repo, demo } = project.data;
+---
+
+<article class="card project">
+  {image && <img src={image} alt={`Screenshot of ${title}`} loading="lazy" decoding="async" />}
+  <div class="body">
+    <h3>{title}</h3>
+    <p class="muted">{summary}</p>
+    {tech.length > 0 && <ul class="chips">{tech.map((t) => <li class="chip">{t}</li>)}</ul>}
+    {
+      (repo || demo) && (
+        <p class="links">
+          {demo && <a href={demo} target="_blank" rel="noopener noreferrer">Live demo →</a>}
+          {repo && <a href={repo} target="_blank" rel="noopener noreferrer">Source code →</a>}
+        </p>
+      )
+    }
+  </div>
+</article>
+
+<style>
+  .project {
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+  }
+  img {
+    aspect-ratio: 16 / 9;
+    object-fit: cover;
+    object-position: top;
+    width: 100%;
+    border-bottom: 1px solid var(--border);
+  }
+  .body {
+    padding: 22px;
+  }
+  h3 {
+    font-size: 1.25rem;
+  }
+  .links {
+    display: flex;
+    gap: 18px;
+    margin: 16px 0 0;
+    font-weight: 600;
+  }
+  .links a {
+    text-decoration: none;
+  }
+</style>

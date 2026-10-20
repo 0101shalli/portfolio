@@ -1,0 +1,72 @@
+---
+import { formatDate, readingTime, type Post } from '../lib/posts';
+
+interface Props {
+  post: Post;
+}
+
+const { post } = Astro.props;
+const { title, description, pubDate, heroImage, draft } = post.data;
+---
+
+<article class="card post">
+  <a href={`/blog/${post.id}`} class="link">
+    {heroImage && <img src={heroImage} alt="" loading="lazy" decoding="async" />}
+    <div class="body">
+      <p class="meta muted">
+        <time datetime={pubDate.toISOString()}>{formatDate(pubDate)}</time>{` · ${readingTime(post.body)}`}
+        {draft && <span class="draft">Draft</span>}
+      </p>
+      <h3>{title}</h3>
+      <p class="muted">{description}</p>
+    </div>
+  </a>
+</article>
+
+<style>
+  .post {
+    overflow: hidden;
+    transition: transform 0.2s ease, border-color 0.2s ease;
+  }
+  .post:hover {
+    transform: translateY(-3px);
+    border-color: var(--accent);
+  }
+  .link {
+    display: block;
+    color: inherit;
+    text-decoration: none;
+    height: 100%;
+  }
+  img {
+    aspect-ratio: 16 / 9;
+    object-fit: cover;
+    width: 100%;
+  }
+  .body {
+    padding: 22px;
+  }
+  .meta {
+    font-family: var(--font-mono);
+    font-size: 0.8rem;
+    margin-bottom: 8px;
+  }
+  h3 {
+    font-size: 1.2rem;
+  }
+  .body p:last-child {
+    margin: 0;
+  }
+  .draft {
+    margin-left: 8px;
+    padding: 2px 8px;
+    border-radius: 999px;
+    background: var(--accent-soft);
+    color: var(--accent);
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .post {
+      transition: none;
+    }
+  }
+</style>

@@ -1,0 +1,74 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import { site, stack, strengths } from '../data/site';
+---
+
+<BaseLayout title="About" description={`About ${site.name}: background, skills and what I love building.`}>
+  <section class="section">
+    <div class="container layout">
+      <div class="bio prose">
+        <p class="eyebrow">About me</p>
+        <h1>Passionate about building software people love to use.</h1>
+        <p>
+          I'm {site.name}, a full-stack developer who loves programming and building very user-friendly software. I'm
+          a graduate of CHITECTMA University and now work as a freelancer.
+        </p>
+        <p>
+          I'm usually a quiet person who loves learning new things and keeping up with trending technologies. I'd
+          describe myself as creative, positive, skilful, hard-working and resilient. Away from the keyboard, you'll
+          find me playing video games or watching action-packed movies.
+        </p>
+        <p>
+          Take a look at my <a href={site.socials[0].href} target="_blank" rel="noopener noreferrer">GitHub</a> or
+          grab my <a href={site.resume} target="_blank" rel="noopener noreferrer">résumé</a>.
+        </p>
+      </div>
+
+      <aside class="side">
+        <div class="card panel">
+          <h2>Tech stack</h2>
+          <ul class="chips">{stack.map((s) => <li class="chip">{s}</li>)}</ul>
+        </div>
+        <div class="card panel">
+          <h2>Strengths</h2>
+          <ul class="list">{strengths.map((s) => <li>{s}</li>)}</ul>
+        </div>
+      </aside>
+    </div>
+  </section>
+</BaseLayout>
+
+<style>
+  .layout {
+    display: grid;
+    gap: 48px;
+    grid-template-columns: 1fr;
+  }
+  @media (min-width: 900px) {
+    .layout {
+      grid-template-columns: 1.6fr 1fr;
+    }
+  }
+  .bio h1 {
+    font-size: clamp(2rem, 3vw + 1rem, 3rem);
+  }
+  .side {
+    display: grid;
+    gap: 24px;
+    align-content: start;
+  }
+  .panel {
+    padding: 24px;
+  }
+  .panel h2 {
+    font-size: 1.15rem;
+    margin-bottom: 16px;
+  }
+  .list {
+    margin: 0;
+    padding-left: 1.1em;
+  }
+  .list li {
+    margin-bottom: 4px;
+  }
+</style>
