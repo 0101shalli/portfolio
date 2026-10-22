@@ -1,0 +1,125 @@
+---
+import { render } from 'astro:content';
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import { getPosts, formatDate, readingTime, tagSlug, type Post } from '../../lib/posts';
+
+export async function getStaticPaths() {
+  const posts = await getPosts();
+  return posts.map((post, i) => ({
+    params: { slug: post.id },
+    props: { post, newer: posts[i - 1], older: posts[i + 1] },
+  }));
+}
+
+interface Props {
+  post: Post;
+  newer?: Post;
+  older?: Post;
+}
+
+const { post, newer, older } = Astro.props;
+const { title, description, pubDate, updatedDate, heroImage, tags } = post.data;
+const { Content } = await render(post);
+---
+
+<BaseLayout title={title} description={description} image={heroImage} type="article" publishedTime={pubDate}>
+  <article class="section">
+    <div class="container post">
+      <a href="/blog" class="back">← All posts</a>
+      <header>
+        <p class="meta muted">
+          <time datetime={pubDate.toISOString()}>{formatDate(pubDate)}</time>
+          {updatedDate && <>{' · Updated '}<time datetime={updatedDate.toISOString()}>{formatDate(updatedDate)}</time></>}
+          {` · ${readingTime(post.body)}`}
+        </p>
+        <h1>{title}</h1>
+        <p class="lead muted">{description}</p>
+        {
+          tags.length > 0 && (
+            <ul class="chips">
+              {tags.map((t) => (
+                <li>
+                  <a class="chip" href={`/blog/tags/${tagSlug(t)}`}>#{t}</a>
+                </li>
+              ))}
+            </ul>
+          )
+        }
+      </header>
+      {heroImage && <img class="hero" src={heroImage} alt="" />}
+      <div class="prose">
+        <Content />
+      </div>
+
+      {
+        (newer || older) && (
+          <nav class="pager" aria-label="More posts">
+            {newer ? <a class="card" href={`/blog/${newer.id}`}><span class="muted">Newer</span>{newer.data.title}</a> : <span />}
+            {older && <a class="card older" href={`/blog/${older.id}`}><span class="muted">Older</span>{older.data.title}</a>}
+          </nav>
+        )
+      }
+    </div>
+  </article>
+</BaseLayout>
+
+<style>
+  .post {
+    max-width: 780px;
+  }
+  .back {
+    display: inline-block;
+    margin-bottom: 32px;
+    text-decoration: none;
+    font-weight: 500;
+  }
+  .meta {
+    font-family: var(--font-mono);
+    font-size: 0.85rem;
+  }
+  h1 {
+    font-size: clamp(2rem, 3vw + 1rem, 3.1rem);
+  }
+  .lead {
+    font-size: 1.2rem;
+  }
+  header {
+    margin-bottom: 36px;
+  }
+  .hero {
+    width: 100%;
+    border-radius: var(--radius);
+    margin-bottom: 40px;
+  }
+  .pager {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 16px;
+    margin-top: 64px;
+    padding-top: 32px;
+    border-top: 1px solid var(--border);
+  }
+  .pager a {
+    display: grid;
+    gap: 4px;
+    padding: 18px 20px;
+    color: var(--text);
+    text-decoration: none;
+    font-weight: 600;
+  }
+  .pager a:hover {
+    border-color: var(--accent);
+  }
+  .pager .older {
+    text-align: right;
+  }
+  .pager span.muted {
+    font-size: 0.8rem;
+    font-weight: 400;
+  }
+  @media (max-width: 560px) {
+    .pager {
+      grid-template-columns: 1fr;
+    }
+  }
+</style>

@@ -1,0 +1,71 @@
+# Decap CMS configuration — https://decapcms.org/docs/configuration-options/
+# Open https://<your-site>/admin to write and publish blog posts from the browser.
+backend:
+  name: github
+  repo: 0101shalli/portfolio
+  branch: main
+  auth_endpoint: api/auth # served by api/auth.js on Vercel
+  # base_url is set to the current site origin in admin/index.html
+  commit_messages:
+    create: 'blog: create {{collection}} “{{slug}}”'
+    update: 'blog: update {{collection}} “{{slug}}”'
+    delete: 'blog: delete {{collection}} “{{slug}}”'
+    uploadMedia: 'media: upload “{{path}}”'
+    deleteMedia: 'media: delete “{{path}}”'
+
+# Uncomment to save posts as pull requests (Drafts → In review → Ready) instead of
+# committing straight to main:
+# publish_mode: editorial_workflow
+
+# `npm run cms` + `npm run dev` lets you use the editor locally without logging in.
+local_backend: true
+
+site_url: https://darksideshalli.com
+display_url: https://darksideshalli.com
+logo_url: /favicon.svg
+
+media_folder: public/images/uploads
+public_folder: /images/uploads
+
+collections:
+  - name: blog
+    label: Blog posts
+    label_singular: Blog post
+    description: Articles published at /blog. Toggle “Draft” to hide a post from the live site.
+    folder: src/content/blog
+    create: true
+    slug: '{{slug}}'
+    extension: md
+    format: frontmatter
+    preview_path: 'blog/{{slug}}'
+    sortable_fields: ['pubDate', 'title']
+    summary: '{{title}} — {{pubDate | date("YYYY-MM-DD")}}'
+    fields:
+      - { label: Title, name: title, widget: string }
+      - { label: Description, name: description, widget: text, hint: 'One or two sentences — shown on cards, in search results and social previews.' }
+      - { label: Publish date, name: pubDate, widget: datetime, format: 'YYYY-MM-DD', date_format: 'YYYY-MM-DD', time_format: false }
+      - { label: Updated date, name: updatedDate, widget: datetime, format: 'YYYY-MM-DD', date_format: 'YYYY-MM-DD', time_format: false, required: false }
+      - { label: Cover image, name: heroImage, widget: image, required: false }
+      - { label: Tags, name: tags, widget: list, default: [], required: false }
+      - { label: Draft, name: draft, widget: boolean, default: false }
+      - { label: Body, name: body, widget: markdown }
+
+  - name: projects
+    label: Projects
+    label_singular: Project
+    description: Projects shown on the home page and /work.
+    folder: src/content/projects
+    create: true
+    slug: '{{slug}}'
+    extension: md
+    format: frontmatter
+    fields:
+      - { label: Title, name: title, widget: string }
+      - { label: Summary, name: summary, widget: text }
+      - { label: Screenshot, name: image, widget: image, required: false }
+      - { label: Tech used, name: tech, widget: list, default: [], required: false }
+      - { label: Source code URL, name: repo, widget: string, required: false }
+      - { label: Live demo URL, name: demo, widget: string, required: false }
+      - { label: Featured on home page, name: featured, widget: boolean, default: false }
+      - { label: Sort order, name: order, widget: number, value_type: int, default: 100 }
+      - { label: Details, name: body, widget: markdown, required: false }

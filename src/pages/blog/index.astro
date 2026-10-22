@@ -1,0 +1,47 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import PostCard from '../../components/PostCard.astro';
+import { getPosts, tagSlug } from '../../lib/posts';
+
+const posts = await getPosts();
+const tags = [...new Set(posts.flatMap((p) => p.data.tags))].sort();
+---
+
+<BaseLayout title="Blog" description="Articles, tutorials and notes on building for the web.">
+  <section class="section">
+    <div class="container">
+      <p class="eyebrow">Blog</p>
+      <h1>Writing</h1>
+      <p class="muted intro">Articles, tutorials and notes on what I'm building and learning.</p>
+      {
+        tags.length > 0 && (
+          <ul class="chips tags" aria-label="Tags">
+            {tags.map((t) => (
+              <li>
+                <a class="chip" href={`/blog/tags/${tagSlug(t)}`}>#{t}</a>
+              </li>
+            ))}
+          </ul>
+        )
+      }
+      {
+        posts.length > 0 ? (
+          <div class="grid">
+            {posts.map((post) => <PostCard post={post} />)}
+          </div>
+        ) : (
+          <p class="muted">No posts yet — check back soon.</p>
+        )
+      }
+    </div>
+  </section>
+</BaseLayout>
+
+<style>
+  .intro {
+    max-width: 60ch;
+  }
+  .tags {
+    margin: 24px 0 40px;
+  }
+</style>

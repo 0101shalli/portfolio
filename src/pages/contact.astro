@@ -1,0 +1,81 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import { site } from '../data/site';
+---
+
+<BaseLayout title="Contact" description={`Get in touch with ${site.name} for freelance work and collaborations.`}>
+  <section class="section">
+    <div class="container narrow">
+      <p class="eyebrow">Contact</p>
+      <h1>Let's work together.</h1>
+      <p class="muted lead">
+        Whether you need my services or want to build something amazing together, I'd like to hear from you.
+      </p>
+
+      <a class="card email" href={`mailto:${site.email}?subject=Hello%20from%20your%20portfolio`}>
+        <span class="muted">Email me</span>
+        <strong>{site.email}</strong>
+      </a>
+
+      <h2>Find me online</h2>
+      <ul class="socials">
+        {
+          site.socials.map((s) => (
+            <li>
+              <a class="card" href={s.href} target="_blank" rel="noopener noreferrer">
+                {s.label} <span aria-hidden="true">↗</span>
+              </a>
+            </li>
+          ))
+        }
+      </ul>
+    </div>
+  </section>
+</BaseLayout>
+
+<style>
+  .narrow {
+    max-width: 760px;
+  }
+  .lead {
+    font-size: 1.2rem;
+    margin-bottom: 36px;
+  }
+  .email {
+    display: grid;
+    gap: 4px;
+    padding: 28px;
+    text-decoration: none;
+    color: var(--text);
+    margin-bottom: 48px;
+    transition: border-color 0.2s ease;
+  }
+  .email strong {
+    font-size: clamp(1.15rem, 2vw + 0.8rem, 1.75rem);
+    color: var(--accent);
+    overflow-wrap: anywhere;
+  }
+  .email:hover,
+  .socials a:hover {
+    border-color: var(--accent);
+  }
+  h2 {
+    font-size: 1.25rem;
+  }
+  .socials {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+    gap: 12px;
+    list-style: none;
+    padding: 0;
+    margin: 0;
+  }
+  .socials a {
+    display: flex;
+    justify-content: space-between;
+    padding: 18px 20px;
+    color: var(--text);
+    text-decoration: none;
+    font-weight: 600;
+  }
+</style>

@@ -1,0 +1,130 @@
+---
+import { getCollection } from 'astro:content';
+import BaseLayout from '../layouts/BaseLayout.astro';
+import ProjectCard from '../components/ProjectCard.astro';
+import PostCard from '../components/PostCard.astro';
+import { site, stack } from '../data/site';
+import { getPosts } from '../lib/posts';
+
+const projects = (await getCollection('projects'))
+  .filter((p) => p.data.featured)
+  .sort((a, b) => a.data.order - b.data.order)
+  .slice(0, 3);
+const posts = (await getPosts()).slice(0, 3);
+---
+
+<BaseLayout>
+  <section class="hero">
+    <div class="container">
+      {site.available && <p class="status"><span class="dot" aria-hidden="true"></span> Available for freelance work</p>}
+      <h1>
+        Hi, I'm {site.name.split(' ')[0]}.<br />
+        <span class="accent">{site.role}.</span>
+      </h1>
+      <p class="lead muted">{site.tagline}</p>
+      <div class="cta">
+        <a class="btn btn-primary" href="/work">View my work</a>
+        <a class="btn btn-ghost" href="/contact">Get in touch</a>
+        <a class="btn btn-ghost" href={site.resume} target="_blank" rel="noopener noreferrer">Résumé ↗</a>
+      </div>
+      <ul class="chips stack" aria-label="Tech stack">
+        {stack.map((s) => <li class="chip">{s}</li>)}
+      </ul>
+    </div>
+  </section>
+
+  <section class="section reveal">
+    <div class="container">
+      <div class="section-head">
+        <div>
+          <p class="eyebrow">Selected work</p>
+          <h2>Things I've built</h2>
+        </div>
+        <a href="/work">All projects →</a>
+      </div>
+      <div class="grid">
+        {projects.map((project) => <ProjectCard project={project} />)}
+      </div>
+    </div>
+  </section>
+
+  <section class="section reveal">
+    <div class="container">
+      <div class="section-head">
+        <div>
+          <p class="eyebrow">Writing</p>
+          <h2>Latest from the blog</h2>
+        </div>
+        <a href="/blog">All posts →</a>
+      </div>
+      {
+        posts.length > 0 ? (
+          <div class="grid">
+            {posts.map((post) => <PostCard post={post} />)}
+          </div>
+        ) : (
+          <p class="muted">No posts yet — check back soon.</p>
+        )
+      }
+    </div>
+  </section>
+
+  <section class="section reveal">
+    <div class="container">
+      <div class="card contact-cta">
+        <h2>Let's build something amazing together.</h2>
+        <p class="muted">Need a website, web app or a hand with your next project? I'd love to hear from you.</p>
+        <a class="btn btn-primary" href={`mailto:${site.email}?subject=Project%20enquiry`}>Say hello</a>
+      </div>
+    </div>
+  </section>
+</BaseLayout>
+
+<style>
+  .hero {
+    padding: clamp(72px, 12vw, 140px) 0 clamp(48px, 8vw, 96px);
+    background:
+      radial-gradient(60% 50% at 85% 0%, var(--accent-soft), transparent 70%),
+      radial-gradient(40% 40% at 0% 100%, var(--accent-soft), transparent 70%);
+  }
+  .status {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    padding: 6px 14px;
+    border: 1px solid var(--border);
+    border-radius: 999px;
+    background: var(--bg-elev);
+    font-size: 0.85rem;
+    margin-bottom: 28px;
+  }
+  .dot {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    background: #22c55e;
+    box-shadow: 0 0 0 4px rgba(34, 197, 94, 0.2);
+  }
+  .accent {
+    color: var(--accent);
+  }
+  .lead {
+    font-size: clamp(1.1rem, 1vw + 0.9rem, 1.35rem);
+    max-width: 60ch;
+    margin: 20px 0 32px;
+  }
+  .cta {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 12px;
+    margin-bottom: 36px;
+  }
+  .contact-cta {
+    padding: clamp(32px, 6vw, 64px);
+    text-align: center;
+  }
+  .contact-cta p {
+    max-width: 50ch;
+    margin: 0 auto 24px;
+  }
+</style>
