@@ -4,8 +4,10 @@ backend:
   name: github
   repo: 0101shalli/portfolio
   branch: main
-  auth_endpoint: api/auth # served by api/auth.js on Vercel
-  # base_url is set to the current site origin in admin/index.html
+  # GitHub login is handled by api/auth.js and api/callback.js on this site.
+  # If you move to a custom domain, change base_url (and the GitHub OAuth App URLs).
+  base_url: https://portfolio-indol-ten-20.vercel.app
+  auth_endpoint: api/auth
   commit_messages:
     create: 'blog: create {{collection}} “{{slug}}”'
     update: 'blog: update {{collection}} “{{slug}}”'
@@ -20,8 +22,8 @@ backend:
 # `npm run cms` + `npm run dev` lets you use the editor locally without logging in.
 local_backend: true
 
-site_url: https://darksideshalli.com
-display_url: https://darksideshalli.com
+site_url: https://portfolio-indol-ten-20.vercel.app
+display_url: https://portfolio-indol-ten-20.vercel.app
 logo_url: /favicon.svg
 
 media_folder: public/images/uploads

@@ -74,21 +74,20 @@ Posts with `draft: true` appear in `npm run dev` but not on the live site.
 
 1. Push this repo to GitHub, then on Vercel choose **Add New → Project → Import** `0101shalli/portfolio`.
    Vercel detects Astro automatically. No settings need to change.
-2. **Custom domain:** Project → Settings → Domains → add `darksideshalli.com`, then update the DNS records at
-   your registrar as Vercel instructs. Then turn off GitHub Pages for this repo
-   (Settings → Pages) so the two hosts don't conflict. Set `SITE_URL=https://darksideshalli.com` in
-   Vercel → Settings → Environment Variables.
+2. The site is live at <https://portfolio-indol-ten-20.vercel.app>. If you later buy a custom domain, add it under Project → Settings →
+   Domains, set `SITE_URL=https://your-domain.com` in Vercel → Settings → Environment Variables, and update
+   the OAuth App URLs below.
 
 ### Blog editor (`/admin`) setup — one time
 
 The editor logs in with GitHub through the two small functions in `api/`.
 
 1. Create a GitHub OAuth App at <https://github.com/settings/developers> → **New OAuth App**:
-   - Homepage URL: `https://darksideshalli.com`
-   - Authorization callback URL: `https://darksideshalli.com/api/callback`
+   - Homepage URL: `https://portfolio-indol-ten-20.vercel.app`
+   - Authorization callback URL: `https://portfolio-indol-ten-20.vercel.app/api/callback`
 2. In Vercel → Settings → Environment Variables, add `GITHUB_CLIENT_ID` and `GITHUB_CLIENT_SECRET`
    from that app (and `GITHUB_OAUTH_SCOPE=repo,user` if the repo is private). Redeploy.
-3. Visit `/admin` and sign in. Only GitHub accounts with write access to the repo can publish.
+3. Visit <https://portfolio-indol-ten-20.vercel.app/admin/> and click **Login with GitHub**. Only GitHub accounts with write access to the repo can publish.
 
 ### Contact form setup — one time
 
@@ -99,7 +98,7 @@ The "Email me" / "Say hello" buttons open a pop-up form that sends you an email 
    then create an API key.
 2. In Vercel → Settings → Environment Variables, add `RESEND_API_KEY` and
    `CONTACT_TO_EMAIL=shallileroi@gmail.com`. Redeploy.
-3. Optional: verify `darksideshalli.com` in Resend and set `CONTACT_FROM_EMAIL` so mail comes from your domain.
+3. Optional: if you get your own domain, verify it in Resend and set `CONTACT_FROM_EMAIL` so mail comes from your domain.
 
 Until this is set up, the form shows a message pointing visitors to your email address instead. The form
 only works on Vercel (or `npx vercel dev`), not under `npm run dev`.
