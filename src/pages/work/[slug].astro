@@ -1,0 +1,110 @@
+---
+import { render } from 'astro:content';
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import { formatDate } from '../../lib/posts';
+import { getProjects, type Project } from '../../lib/projects';
+
+export async function getStaticPaths() {
+  const projects = await getProjects();
+  return projects.map((project) => ({ params: { slug: project.id }, props: { project } }));
+}
+
+interface Props {
+  project: Project;
+}
+
+const { project } = Astro.props;
+const { title, summary, date, image, gallery, tech, repo, demo } = project.data;
+const { Content } = await render(project);
+---
+
+<BaseLayout title={title} description={summary} image={image} type="article">
+  <article class="section">
+    <div class="container narrow">
+      <a href="/work" class="back">← All work</a>
+      <header>
+        <p class="eyebrow">Project{date && <> · <time datetime={date.toISOString()}>{formatDate(date)}</time></>}</p>
+        <h1>{title}</h1>
+        <p class="lead muted">{summary}</p>
+        {tech.length > 0 && <ul class="chips">{tech.map((t) => <li class="chip">{t}</li>)}</ul>}
+        {
+          (demo || repo) && (
+            <div class="cta">
+              {demo && <a class="btn btn-primary" href={demo} target="_blank" rel="noopener noreferrer">Live demo ↗</a>}
+              {repo && <a class="btn btn-ghost" href={repo} target="_blank" rel="noopener noreferrer">Source code ↗</a>}
+            </div>
+          )
+        }
+      </header>
+
+      {image && <img class="cover" src={image} alt={`Screenshot of ${title}`} />}
+
+      <div class="prose">
+        <Content />
+      </div>
+
+      {
+        gallery.length > 0 && (
+          <section class="gallery" aria-label="Gallery">
+            <h2>Gallery</h2>
+            <div class="shots">
+              {gallery.map((src, i) => (
+                <a href={src} target="_blank" rel="noopener">
+                  <img src={src} alt={`${title} screenshot ${i + 1}`} loading="lazy" decoding="async" />
+                </a>
+              ))}
+            </div>
+          </section>
+        )
+      }
+    </div>
+  </article>
+</BaseLayout>
+
+<style>
+  .narrow {
+    max-width: 860px;
+  }
+  .back {
+    display: inline-block;
+    margin-bottom: 32px;
+    text-decoration: none;
+    font-weight: 500;
+  }
+  h1 {
+    font-size: clamp(2rem, 3vw + 1rem, 3.1rem);
+  }
+  .lead {
+    font-size: 1.2rem;
+  }
+  header {
+    margin-bottom: 36px;
+  }
+  .cta {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 12px;
+    margin-top: 24px;
+  }
+  .cover {
+    width: 100%;
+    border-radius: var(--radius);
+    border: 1px solid var(--border);
+    margin-bottom: 40px;
+  }
+  .gallery {
+    margin-top: 48px;
+  }
+  .shots {
+    display: grid;
+    gap: 16px;
+    grid-template-columns: repeat(auto-fill, minmax(min(100%, 240px), 1fr));
+  }
+  .shots img {
+    width: 100%;
+    aspect-ratio: 4 / 3;
+    object-fit: cover;
+    border-radius: 10px;
+    border: 1px solid var(--border);
+  }
+</style>

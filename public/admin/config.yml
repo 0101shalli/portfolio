@@ -28,10 +28,12 @@ media_folder: public/images/uploads
 public_folder: /images/uploads
 
 collections:
+  # Both collections show up in the sidebar and under the "New" button at the top:
+  # pick "Blog post" to write an article, or "Accomplished work" to add a project.
   - name: blog
-    label: Blog posts
+    label: 📝 Blog posts
     label_singular: Blog post
-    description: Articles published at /blog. Toggle “Draft” to hide a post from the live site.
+    description: Articles published at /blog. Use the image button in the editor toolbar to add pictures anywhere in the post. Toggle “Draft” to hide a post from the live site.
     folder: src/content/blog
     create: true
     slug: '{{slug}}'
@@ -45,27 +47,32 @@ collections:
       - { label: Description, name: description, widget: text, hint: 'One or two sentences — shown on cards, in search results and social previews.' }
       - { label: Publish date, name: pubDate, widget: datetime, format: 'YYYY-MM-DD', date_format: 'YYYY-MM-DD', time_format: false }
       - { label: Updated date, name: updatedDate, widget: datetime, format: 'YYYY-MM-DD', date_format: 'YYYY-MM-DD', time_format: false, required: false }
-      - { label: Cover image, name: heroImage, widget: image, required: false }
+      - { label: Cover image, name: heroImage, widget: image, required: false, hint: 'Shown at the top of the post and on its card. Landscape images (16:9) look best.' }
       - { label: Tags, name: tags, widget: list, default: [], required: false }
       - { label: Draft, name: draft, widget: boolean, default: false }
-      - { label: Body, name: body, widget: markdown }
+      - { label: Body, name: body, widget: markdown, hint: 'Click the “+” / image button in the toolbar to upload and insert images.' }
 
   - name: projects
-    label: Projects
-    label_singular: Project
-    description: Projects shown on the home page and /work.
+    label: 🏆 Accomplished work
+    label_singular: Accomplished work
+    description: Projects you have completed. They appear on /work (and on the home page if “Featured” is on), each with its own page.
     folder: src/content/projects
     create: true
     slug: '{{slug}}'
     extension: md
     format: frontmatter
+    preview_path: 'work/{{slug}}'
+    sortable_fields: ['date', 'title', 'order']
+    summary: '{{title}}'
     fields:
       - { label: Title, name: title, widget: string }
-      - { label: Summary, name: summary, widget: text }
-      - { label: Screenshot, name: image, widget: image, required: false }
+      - { label: Summary, name: summary, widget: text, hint: 'One or two sentences shown on the project card.' }
+      - { label: Completed on, name: date, widget: datetime, format: 'YYYY-MM-DD', date_format: 'YYYY-MM-DD', time_format: false, required: false }
+      - { label: Cover screenshot, name: image, widget: image, required: false }
+      - { label: Gallery, name: gallery, widget: list, required: false, default: [], field: { label: Image, name: image, widget: image }, hint: 'Extra screenshots shown at the bottom of the project page.' }
       - { label: Tech used, name: tech, widget: list, default: [], required: false }
-      - { label: Source code URL, name: repo, widget: string, required: false }
       - { label: Live demo URL, name: demo, widget: string, required: false }
-      - { label: Featured on home page, name: featured, widget: boolean, default: false }
-      - { label: Sort order, name: order, widget: number, value_type: int, default: 100 }
-      - { label: Details, name: body, widget: markdown, required: false }
+      - { label: Source code URL, name: repo, widget: string, required: false }
+      - { label: Featured on home page, name: featured, widget: boolean, default: true }
+      - { label: Sort order, name: order, widget: number, value_type: int, default: 100, hint: 'Lower numbers show first.' }
+      - { label: Write-up, name: body, widget: markdown, required: false, hint: 'The problem, your role, how you built it and the result. Use the image button to add pictures.' }

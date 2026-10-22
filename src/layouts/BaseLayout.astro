@@ -2,6 +2,7 @@
 import '../styles/global.css';
 import Header from '../components/Header.astro';
 import Footer from '../components/Footer.astro';
+import ContactModal from '../components/ContactModal.astro';
 import { site } from '../data/site';
 
 interface Props {
@@ -68,6 +69,7 @@ const ogImage = new URL(image, Astro.site);
       <slot />
     </main>
     <Footer />
+    <ContactModal />
 
     <script>
       const els = document.querySelectorAll('.reveal');

@@ -1,15 +1,12 @@
 ---
-import { getCollection } from 'astro:content';
 import BaseLayout from '../layouts/BaseLayout.astro';
 import ProjectCard from '../components/ProjectCard.astro';
 import PostCard from '../components/PostCard.astro';
 import { site, stack } from '../data/site';
 import { getPosts } from '../lib/posts';
+import { getProjects } from '../lib/projects';
 
-const projects = (await getCollection('projects'))
-  .filter((p) => p.data.featured)
-  .sort((a, b) => a.data.order - b.data.order)
-  .slice(0, 3);
+const projects = (await getProjects()).filter((p) => p.data.featured).slice(0, 3);
 const posts = (await getPosts()).slice(0, 3);
 ---
 
@@ -74,7 +71,7 @@ const posts = (await getPosts()).slice(0, 3);
       <div class="card contact-cta">
         <h2>Let's build something amazing together.</h2>
         <p class="muted">Need a website, web app or a hand with your next project? I'd love to hear from you.</p>
-        <a class="btn btn-primary" href={`mailto:${site.email}?subject=Project%20enquiry`}>Say hello</a>
+        <a class="btn btn-primary" href={`mailto:${site.email}?subject=Project%20enquiry`} data-contact>Say hello</a>
       </div>
     </div>
   </section>
