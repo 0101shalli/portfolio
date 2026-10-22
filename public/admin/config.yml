@@ -4,8 +4,10 @@ backend:
   name: github
   repo: 0101shalli/portfolio
   branch: main
-  auth_endpoint: api/auth # served by api/auth.js on Vercel
-  # base_url is set to the current site origin in admin/index.html
+  # GitHub login is handled by api/auth.js and api/callback.js on this site.
+  # If you move to a custom domain, change base_url (and the GitHub OAuth App URLs).
+  base_url: https://portfolio-indol-ten-20.vercel.app
+  auth_endpoint: api/auth
   commit_messages:
     create: 'blog: create {{collection}} “{{slug}}”'
     update: 'blog: update {{collection}} “{{slug}}”'

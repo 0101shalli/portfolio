@@ -10,14 +10,8 @@
     <link href="/admin/config.yml" type="text/yaml" rel="cms-config-url" />
   </head>
   <body>
-    <script>
-      // Decap reads config.yml next to this file; we only add the OAuth host at runtime
-      // so the same build works on localhost, Vercel previews and the production domain.
-      window.CMS_MANUAL_INIT = true;
-    </script>
     <script src="https://unpkg.com/decap-cms@3.16.3/dist/decap-cms.js"></script>
     <script>
-      CMS.init({ config: { backend: { base_url: window.location.origin } } });
       CMS.registerPreviewStyle('/admin/preview.css');
     </script>
   </body>
