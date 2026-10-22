@@ -1,28 +1,32 @@
 ---
-import type { CollectionEntry } from 'astro:content';
+import type { Project } from '../lib/projects';
 
 interface Props {
-  project: CollectionEntry<'projects'>;
+  project: Project;
 }
 
 const { project } = Astro.props;
 const { title, summary, image, tech, repo, demo } = project.data;
+const href = `/work/${project.id}`;
 ---
 
 <article class="card project">
-  {image && <img src={image} alt={`Screenshot of ${title}`} loading="lazy" decoding="async" />}
+  {
+    image && (
+      <a href={href} tabindex="-1" aria-hidden="true">
+        <img src={image} alt="" loading="lazy" decoding="async" />
+      </a>
+    )
+  }
   <div class="body">
-    <h3>{title}</h3>
+    <h3><a href={href}>{title}</a></h3>
     <p class="muted">{summary}</p>
     {tech.length > 0 && <ul class="chips">{tech.map((t) => <li class="chip">{t}</li>)}</ul>}
-    {
-      (repo || demo) && (
-        <p class="links">
-          {demo && <a href={demo} target="_blank" rel="noopener noreferrer">Live demo →</a>}
-          {repo && <a href={repo} target="_blank" rel="noopener noreferrer">Source code →</a>}
-        </p>
-      )
-    }
+    <p class="links">
+      <a href={href}>Read more →</a>
+      {demo && <a href={demo} target="_blank" rel="noopener noreferrer">Live demo ↗</a>}
+      {repo && <a href={repo} target="_blank" rel="noopener noreferrer">Code ↗</a>}
+    </p>
   </div>
 </article>
 
@@ -31,6 +35,11 @@ const { title, summary, image, tech, repo, demo } = project.data;
     overflow: hidden;
     display: flex;
     flex-direction: column;
+    transition: transform 0.2s ease, border-color 0.2s ease;
+  }
+  .project:hover {
+    transform: translateY(-3px);
+    border-color: var(--accent);
   }
   img {
     aspect-ratio: 16 / 9;
@@ -45,13 +54,26 @@ const { title, summary, image, tech, repo, demo } = project.data;
   h3 {
     font-size: 1.25rem;
   }
+  h3 a {
+    color: var(--text);
+    text-decoration: none;
+  }
+  h3 a:hover {
+    color: var(--accent);
+  }
   .links {
     display: flex;
-    gap: 18px;
+    flex-wrap: wrap;
+    gap: 8px 18px;
     margin: 16px 0 0;
     font-weight: 600;
   }
   .links a {
     text-decoration: none;
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .project {
+      transition: none;
+    }
   }
 </style>

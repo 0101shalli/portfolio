@@ -1,0 +1,212 @@
+---
+import { site } from '../data/site';
+---
+
+<dialog id="contact-dialog" class="dialog" aria-labelledby="contact-title">
+  <form class="form" novalidate>
+    <div class="head">
+      <h2 id="contact-title">Send me a message</h2>
+      <button type="button" class="close" data-close aria-label="Close">×</button>
+    </div>
+    <p class="muted intro">I usually reply within a day or two.</p>
+
+    <div class="row">
+      <label>
+        <span>Name</span>
+        <input name="name" required maxlength="100" autocomplete="name" />
+      </label>
+      <label>
+        <span>Email</span>
+        <input name="email" type="email" required maxlength="200" autocomplete="email" />
+      </label>
+    </div>
+    <label>
+      <span>Subject <em class="muted">(optional)</em></span>
+      <input name="subject" maxlength="150" />
+    </label>
+    <label>
+      <span>Message</span>
+      <textarea name="message" required rows="6" maxlength="5000"></textarea>
+    </label>
+    <label class="hp" aria-hidden="true">
+      Website <input name="website" tabindex="-1" autocomplete="off" />
+    </label>
+
+    <p class="status" role="status" aria-live="polite"></p>
+
+    <div class="actions">
+      <a class="direct" href={`mailto:${site.email}`}>or email {site.email}</a>
+      <button type="submit" class="btn btn-primary">Send message</button>
+    </div>
+  </form>
+</dialog>
+
+<style>
+  .dialog {
+    width: min(560px, calc(100vw - 32px));
+    max-height: calc(100dvh - 32px);
+    padding: 0;
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    background: var(--bg-elev);
+    color: var(--text);
+    box-shadow: 0 24px 64px rgba(0, 0, 0, 0.35);
+  }
+  .dialog::backdrop {
+    background: rgba(5, 5, 10, 0.6);
+    backdrop-filter: blur(4px);
+  }
+  .form {
+    display: grid;
+    gap: 14px;
+    padding: clamp(20px, 4vw, 32px);
+  }
+  .head {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 12px;
+  }
+  h2 {
+    font-size: 1.4rem;
+    margin: 0;
+  }
+  .intro {
+    margin: -6px 0 4px;
+  }
+  .close {
+    width: 36px;
+    height: 36px;
+    border-radius: 10px;
+    border: 1px solid var(--border);
+    background: transparent;
+    color: var(--text);
+    font-size: 1.4rem;
+    line-height: 1;
+    cursor: pointer;
+  }
+  .row {
+    display: grid;
+    gap: 14px;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  }
+  label {
+    display: grid;
+    gap: 6px;
+    font-size: 0.9rem;
+    font-weight: 500;
+  }
+  em {
+    font-style: normal;
+    font-weight: 400;
+  }
+  input,
+  textarea {
+    width: 100%;
+    padding: 11px 14px;
+    border-radius: 10px;
+    border: 1px solid var(--border);
+    background: var(--bg);
+    color: var(--text);
+    font: inherit;
+    font-size: 1rem;
+  }
+  textarea {
+    resize: vertical;
+    min-height: 120px;
+  }
+  input:focus,
+  textarea:focus {
+    outline: none;
+    border-color: var(--accent);
+    box-shadow: 0 0 0 3px var(--accent-soft);
+  }
+  .hp {
+    position: absolute;
+    left: -9999px;
+  }
+  .status {
+    margin: 0;
+    min-height: 1.4em;
+    font-size: 0.92rem;
+  }
+  .status.error {
+    color: var(--accent);
+  }
+  .status.success {
+    color: #16a34a;
+  }
+  .actions {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    align-items: center;
+    gap: 12px;
+  }
+  .direct {
+    font-size: 0.85rem;
+    color: var(--text-muted);
+    overflow-wrap: anywhere;
+  }
+  .btn {
+    border: 0;
+    cursor: pointer;
+    font: inherit;
+    font-weight: 600;
+  }
+  .btn[disabled] {
+    opacity: 0.6;
+    cursor: progress;
+  }
+</style>
+
+<script>
+  const dialog = document.getElementById('contact-dialog') as HTMLDialogElement | null;
+  const form = dialog?.querySelector('form');
+  const status = dialog?.querySelector<HTMLElement>('.status');
+  const submit = dialog?.querySelector<HTMLButtonElement>('button[type="submit"]');
+
+  const setStatus = (text: string, kind: '' | 'error' | 'success' = '') => {
+    if (!status) return;
+    status.textContent = text;
+    status.className = `status ${kind}`;
+  };
+
+  // Any element with data-contact opens the modal; its href stays as a no-JS fallback.
+  document.addEventListener('click', (e) => {
+    const trigger = (e.target as Element).closest('[data-contact]');
+    if (!trigger || !dialog?.showModal) return;
+    e.preventDefault();
+    setStatus('');
+    dialog.showModal();
+  });
+
+  dialog?.addEventListener('click', (e) => {
+    // Close on the close button or a click on the backdrop.
+    if ((e.target as Element).closest('[data-close]') || e.target === dialog) dialog.close();
+  });
+
+  form?.addEventListener('submit', async (e) => {
+    e.preventDefault();
+    if (!form.reportValidity()) return;
+    const data = Object.fromEntries(new FormData(form));
+    submit && (submit.disabled = true);
+    setStatus('Sending…');
+    try {
+      const res = await fetch('/api/contact', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(data),
+      });
+      const body = await res.json().catch(() => ({}));
+      if (!res.ok) throw new Error(body.error ?? 'Something went wrong.');
+      form.reset();
+      setStatus("Thanks! Your message has been sent — I'll get back to you soon.", 'success');
+    } catch (err) {
+      const msg = err instanceof Error ? err.message : 'Something went wrong.';
+      setStatus(`${msg} You can also email me directly using the link below.`, 'error');
+    } finally {
+      submit && (submit.disabled = false);
+    }
+  });
+</script>
