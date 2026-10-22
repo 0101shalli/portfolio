@@ -20,8 +20,8 @@ backend:
 # `npm run cms` + `npm run dev` lets you use the editor locally without logging in.
 local_backend: true
 
-site_url: https://darksideshalli.com
-display_url: https://darksideshalli.com
+site_url: https://portfolio-indol-ten-20.vercel.app
+display_url: https://portfolio-indol-ten-20.vercel.app
 logo_url: /favicon.svg
 
 media_folder: public/images/uploads
